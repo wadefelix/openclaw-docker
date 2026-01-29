@@ -27,6 +27,13 @@ IMAGE="ghcr.io/phioranex/moltbot-docker:latest"
 REPO_URL="https://github.com/phioranex/moltbot-docker"
 COMPOSE_URL="https://raw.githubusercontent.com/phioranex/moltbot-docker/main/docker-compose.yml"
 
+# Detect if we have a TTY (for Docker interactive mode)
+if [ -t 0 ]; then
+    DOCKER_TTY_FLAG=""
+else
+    DOCKER_TTY_FLAG="-T"
+fi
+
 # Flags
 NO_START=false
 SKIP_ONBOARD=false
@@ -182,7 +189,7 @@ if [ "$SKIP_ONBOARD" = false ]; then
     echo -e "${YELLOW}Setting up configuration and workspace...${NC}\n"
     
     # Run setup to initialize config and workspace
-    if ! $COMPOSE_CMD run --rm moltbot-cli setup; then
+    if ! $COMPOSE_CMD run $DOCKER_TTY_FLAG --rm moltbot-cli setup; then
         log_error "Setup failed"
         echo -e "${RED}Failed to initialize configuration. Please check Docker logs.${NC}"
         exit 1
@@ -194,7 +201,7 @@ if [ "$SKIP_ONBOARD" = false ]; then
     echo -e "${YELLOW}Follow the prompts to complete setup.${NC}\n"
     
     # Run onboarding
-    if ! $COMPOSE_CMD run --rm moltbot-cli onboard; then
+    if ! $COMPOSE_CMD run $DOCKER_TTY_FLAG --rm moltbot-cli onboard; then
         log_warning "Onboarding wizard was skipped or failed"
         echo -e "${YELLOW}You can run it later with:${NC} cd $INSTALL_DIR && $COMPOSE_CMD run --rm moltbot-cli onboard"
     else

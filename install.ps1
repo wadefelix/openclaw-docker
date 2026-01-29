@@ -169,7 +169,7 @@ if (-not $SkipOnboard) {
     Write-Host ""
     
     # Run setup to initialize config and workspace
-    $setupResult = & $ComposeCmd.Split() run --rm moltbot-cli setup
+    $setupResult = & $ComposeCmd.Split() run -T --rm moltbot-cli setup
     if ($LASTEXITCODE -ne 0) {
         Write-Error "Setup failed"
         Write-Host "Failed to initialize configuration. Please check Docker logs." -ForegroundColor Red
@@ -183,7 +183,7 @@ if (-not $SkipOnboard) {
     Write-Host ""
     
     # Run onboarding
-    & $ComposeCmd.Split() run --rm moltbot-cli onboard
+    & $ComposeCmd.Split() run -T --rm moltbot-cli onboard
     if ($LASTEXITCODE -ne 0) {
         Write-Warning "Onboarding wizard was skipped or failed"
         Write-Host "You can run it later with: cd $InstallDir && $ComposeCmd run --rm moltbot-cli onboard" -ForegroundColor Yellow
