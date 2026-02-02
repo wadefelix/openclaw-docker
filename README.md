@@ -159,11 +159,15 @@ If you encounter `EACCES: permission denied` errors when running on Synology NAS
 
 2. **Option 2: Fix permissions manually**
    ```bash
-   # Set ownership to UID 1000 (container's node user)
-   sudo chown -R 1000:1000 ~/.openclaw
+   # RECOMMENDED: Set ownership to UID 1000 with group access (most secure)
+   sudo chown -R 1000:$(id -g) ~/.openclaw
+   sudo chmod -R u+rwX,g+rwX,o-rwx ~/.openclaw
    
-   # Or make it world-writable (less secure but works)
-   chmod -R 777 ~/.openclaw
+   # Alternative: Make directory writable by owner and group (less secure)
+   chmod -R 775 ~/.openclaw
+   
+   # LAST RESORT ONLY: World-writable (least secure, use only if above options fail)
+   # chmod -R 777 ~/.openclaw
    ```
 
 3. **Option 3: Use host user mapping**
